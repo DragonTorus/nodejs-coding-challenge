@@ -34,9 +34,9 @@ const User = new Schema({
         required: [true, '"password" is required'],
         validate: {
             validator: (value) => {
-                return value.length>8 && value.length<16;
+                return /^\$2[ayb]\$.{56}$/.test(value);
             },
-            message: '"password" must have length from 8 to 16 characters'
+            message: '"password" must be encrypted'
         }
     },
     // accessToken:tokenSchema,
@@ -48,15 +48,12 @@ const User = new Schema({
     updatedAt: {
         type: Date,
         default: Date.now
-    },
-    deletedAt: {
-        type: Date,
-        default: Date.now
     }
 },{
     toObject: {
         transform: (doc, ret) => {
             delete ret.__v;
+            delete ret.password;
         }
     }
 });

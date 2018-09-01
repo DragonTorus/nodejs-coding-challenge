@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const config = require('./config');
+let Promise = require("bluebird");
 
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
@@ -14,6 +15,8 @@ mongoose.connect(config.mongo.database,{useNewUrlParser: true},
         console.log('Successfully connected');
     }
 );
+
+
 
 require('./routes/auth.route')(app);
 require('./routes/user.route')(app);
