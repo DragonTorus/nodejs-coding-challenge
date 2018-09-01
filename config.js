@@ -1,6 +1,6 @@
 module.exports = function () {
     return {
-        environment: process.env.NODE_ENV || "development",
+        environment: process.env.NODE_ENV || 'development',
         server:{
             port: process.env.SERVER_PORT || 3000
         },
@@ -12,14 +12,18 @@ module.exports = function () {
             database: process.env.MONGO_CONNECTION || 'mongodb://localhost:27017/development'
         },
         tokenSettings:{
-            refresh:{
-                maxValidTimeInSeconds:24*3600,
+            types : {
+                access:'accessToken',
+                refresh:'refreshToken'
+            },
+            refreshToken:{
+                maxValidTimeInSeconds:3600*24,
                 maxUsage:1
             },
-            access:{
-                maxValidTimeInSeconds:3600,
+            accessToken:{
+                maxValidTimeInSeconds:1,
                 maxUsage:1
             }
         }
-    }
+    };
 }();
