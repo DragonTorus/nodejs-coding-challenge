@@ -9,9 +9,7 @@ exports.createUser = async function(req, res) {
 
         req.body.password = await getStringHash(req.body.password);
 
-        let user = await UserModel.findOneAndUpdate({'name':req.body.email}, req.body,
-                {upsert:true,new: true,runValidators: true, setDefaultsOnInsert: true}
-            );
+        let user = await UserModel.save(req.body);
 
         res.json(user);
     } catch (e) {
@@ -20,13 +18,43 @@ exports.createUser = async function(req, res) {
 };
 
 exports.getAllUsers = async function(req, res) {
-    res.status(501).json({'message':'not implemented'});
+    try {
+        let users = await UserModel.find();
+        if (!users){
+            throw new Error('Entity Not found');
+        }
+        res.json(users);
+    } catch (e) {
+        return res(e);
+    }
 };
 
 exports.getUserById = async function(req, res) {
-    res.status(501).json({'message':'not implemented'});
+    try {
+        let user = await UserModel.findById(req.params.id);
+        if (!user){
+            throw new Error('Entity Not found');
+        }
+        res.json(user);
+    } catch (e) {
+        return res(e);
+    }
 };
 
 exports.updateUser = async function(req, res) {
-    res.status(501).json({'message':'not implemented'});
+    try {
+        if (!req.body.email || !req.body.password){
+            throw new Error('Required data is not defined');
+        }
+
+        req.body.password = await getStringHash(req.body.password);
+
+        let user = await UserModel.findOneAndUpdate({'_id':req.params.id}, req.body,
+            {new: true,runValidators: true}
+        );
+
+        res.json(user);
+    } catch (e) {
+        return res.json(e);
+    }
 };
