@@ -1,0 +1,27 @@
+{
+  "name": "nodejs_coding_challenge",
+  "version": "0.0.1",
+  "description": "NodeJS Coding Challenge",
+  "main": "server.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "mocha",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DragonTorus/nodejs-coding-challenge.git"
+  },
+  "author": "Valery Uzun",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DragonTorus/nodejs-coding-challenge/issues"
+  },
+  "homepage": "https://github.com/DragonTorus/nodejs-coding-challenge#readme",
+  "dependencies": {
+    "express": "^4.16.3",
+    "mocha": "^5.2.0"
+  }
+}
