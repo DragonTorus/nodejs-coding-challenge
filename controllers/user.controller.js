@@ -2,11 +2,12 @@ const UserModel = require('../models/user.model');
 const TokenModel = require('../models/token.model');
 const {getStringHash} = require('../services/bcryptService');
 const uuid = require('uuid/v4');
+const {matiError, errorResponseHandler} = require('../helpers/errorHandler');
 
 exports.createUser = async function(req, res) {
     try {
         if (!req.body.email || !req.body.password){
-            throw new Error('Required data is not defined');
+            throw new matiError('Required data is not defined', 'BadRequest', 400);
         }
 
         let User = new UserModel(req.body);
@@ -18,7 +19,7 @@ exports.createUser = async function(req, res) {
 
         res.json(user);
     } catch (e) {
-        return res.json(e);
+        return errorResponseHandler(e,res);
     }
 };
 
@@ -26,11 +27,11 @@ exports.getAllUsers = async function(req, res) {
     try {
         let users = await UserModel.find();
         if (!users){
-            throw new Error('Entity Not found');
+            throw new matiError('User Not found', 'NotFound', 404);
         }
         res.json(users);
     } catch (e) {
-        return res.json(e);
+        return errorResponseHandler(e,res);
     }
 };
 
@@ -38,18 +39,18 @@ exports.getUserById = async function(req, res) {
     try {
         let user = await UserModel.findById(req.params.id);
         if (!user){
-            throw new Error('Entity Not found');
+            throw new matiError('User Not found', 'NotFound', 404);
         }
         res.json(user);
     } catch (e) {
-        return res.json(e);
+        return errorResponseHandler(e,res);
     }
 };
 
 exports.updateUser = async function(req, res) {
     try {
         if (!req.body.email || !req.body.password){
-            throw new Error('Required data is not defined');
+            throw new matiError('Required data is not defined', 'BadRequest', 400);
         }
 
         req.body.password = await getStringHash(req.body.password);
@@ -60,6 +61,6 @@ exports.updateUser = async function(req, res) {
 
         res.json(user);
     } catch (e) {
-        return res.json(e);
+        return errorResponseHandler(e,res);
     }
 };

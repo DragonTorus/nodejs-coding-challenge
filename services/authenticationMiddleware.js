@@ -1,19 +1,21 @@
 const UserModel = require('../models/user.model');
 const {isTokenStillValidByTimeLimit} = require('../helpers/authenticationHelpers');
 const maxValidTimeInSeconds = require('../config').tokenSettings.accessToken.maxValidTimeInSeconds;
+const {matiError, errorResponseHandler} = require('../helpers/errorHandler');
+
 exports.isAuthenticated = async function (req, res, next) {
     try {
         const token = getTokenFromAuthorizationHeader(req);
         let user = await UserModel.findOne({'accessToken.token': token});
         if (!user){
-            throw new Error('Access token not found');
+            throw new matiError('Access token not found', 'NotFound', 404);
         }
         if (!isTokenStillValidByTimeLimit(user.accessToken.createdAt, maxValidTimeInSeconds)){
-            throw new Error('Access token has expired, please refresh access token');
+            throw new matiError('Access Token expired, please use your refresh token to get new access token', 'Unauthorized', 401);
         }
         next();
     } catch (e) {
-        return res.json(e);
+        return errorResponseHandler(e,res);
     }
 };
 
