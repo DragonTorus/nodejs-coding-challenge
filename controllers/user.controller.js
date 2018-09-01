@@ -1,5 +1,7 @@
 const UserModel = require('../models/user.model');
+const TokenModel = require('../models/token.model');
 const {getStringHash} = require('../services/bcryptService');
+const uuid = require('uuid/v4');
 
 exports.createUser = async function(req, res) {
     try {
@@ -7,9 +9,12 @@ exports.createUser = async function(req, res) {
             throw new Error('Required data is not defined');
         }
 
-        req.body.password = await getStringHash(req.body.password);
+        let User = new UserModel(req.body);
+        User.accessToken = new TokenModel({token:uuid()});
+        User.refreshToken = new TokenModel({token:uuid()});
+        User.password = await getStringHash(req.body.password);
 
-        let user = await UserModel.save(req.body);
+        let user = await UserModel.create(User);
 
         res.json(user);
     } catch (e) {

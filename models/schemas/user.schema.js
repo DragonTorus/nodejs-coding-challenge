@@ -39,8 +39,8 @@ const User = new Schema({
             message: '"password" must be encrypted'
         }
     },
-    // accessToken:tokenSchema,
-    // refreshToken: tokenSchema,
+    accessToken:tokenSchema,
+    refreshToken: tokenSchema,
     createdAt: {
         type: Date,
         default: Date.now
