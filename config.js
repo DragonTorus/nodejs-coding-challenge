@@ -10,6 +10,16 @@ module.exports = function () {
         },
         mongo:{
             database: process.env.MONGO_CONNECTION || 'mongodb://localhost:27017/development'
+        },
+        tokenSettings:{
+            refresh:{
+                maxValidTimeInSeconds:24*3600,
+                maxUsage:1
+            },
+            access:{
+                maxValidTimeInSeconds:3600,
+                maxUsage:1
+            }
         }
     }
 }();

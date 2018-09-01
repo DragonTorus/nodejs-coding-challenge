@@ -21,7 +21,9 @@
   },
   "homepage": "https://github.com/DragonTorus/nodejs-coding-challenge#readme",
   "dependencies": {
+    "body-parser": "^1.18.3",
     "express": "^4.16.3",
-    "mocha": "^5.2.0"
+    "mocha": "^5.2.0",
+    "mongoose": "^5.2.12"
   }
 }
