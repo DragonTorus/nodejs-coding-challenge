@@ -1,6 +1,6 @@
 let mongoose = require('mongoose')
     , Schema = mongoose.Schema;
-const tokenSchema = require('token.schema');
+const tokenSchema = require('./token.schema');
 const User = new Schema({
     _id: {
         type: mongoose.Schema.Types.ObjectId,
@@ -13,9 +13,9 @@ const User = new Schema({
         trim:true,
         validate: {
             validator: (value) => {
-                return value.length>0 && value.length<32;
+                return value.length>8 && value.length<32;
             },
-            message: '"name" must have length from 0 to 32 characters'
+            message: '"name" must have length from 8 to 32 characters'
         }
     },
     email: {
@@ -34,13 +34,13 @@ const User = new Schema({
         required: [true, '"password" is required'],
         validate: {
             validator: (value) => {
-                return value.length>0 && value.length<16;
+                return value.length>8 && value.length<16;
             },
-            message: '"password" must have length from 0 to 16 characters'
+            message: '"password" must have length from 8 to 16 characters'
         }
     },
-    accessToken:tokenSchema,
-    refreshToken: tokenSchema,
+    // accessToken:tokenSchema,
+    // refreshToken: tokenSchema,
     createdAt: {
         type: Date,
         default: Date.now
