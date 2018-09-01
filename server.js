@@ -8,7 +8,7 @@ const mongoose = require('mongoose');
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json({limit: '1mb'}));
 
-mongoose.connect(config.mongo.database,{useNewUrlParser: true},
+mongoose.connect('mongodb://demo:L00pBack@demo.strongloop.com:27017/demo',{useNewUrlParser: true},
     (err) => {
         if (err) {
             throw err;
@@ -16,8 +16,6 @@ mongoose.connect(config.mongo.database,{useNewUrlParser: true},
         console.log('Successfully connected');
     }
 );
-
-
 
 require('./routes/auth.route')(app);
 require('./routes/user.route')(app);

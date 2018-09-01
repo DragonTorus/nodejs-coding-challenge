@@ -20,7 +20,7 @@ exports.authenticateUser = async function(req, res) {
         }
 
         if (!isTokenStillValidByTimeLimit(user.accessToken.createdAt, accessMaxValidTimeInSeconds)){
-            throw new matiError('Token expired, please use your refresh token to get new access token', 'Unauthorized', 401);
+            user = await updateTokenByTypeIfExpired(UserModel, user, TokenTypes.access);
         }
 
         user = await updateTokenByTypeIfExpired(UserModel, user, TokenTypes.refresh);
