@@ -1,3 +1,3 @@
 exports.world = async function(req, res) {
-    res.status(501).json({'message':'not implemented'})
+    res.status(200).json({'hello':'world'});
 };

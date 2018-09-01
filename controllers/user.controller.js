@@ -30,7 +30,7 @@ exports.getAllUsers = async function(req, res) {
         }
         res.json(users);
     } catch (e) {
-        return res(e);
+        return res.json(e);
     }
 };
 
@@ -42,7 +42,7 @@ exports.getUserById = async function(req, res) {
         }
         res.json(user);
     } catch (e) {
-        return res(e);
+        return res.json(e);
     }
 };
 

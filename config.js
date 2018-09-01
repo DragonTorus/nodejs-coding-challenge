@@ -21,7 +21,7 @@ module.exports = function () {
                 maxUsage:1
             },
             accessToken:{
-                maxValidTimeInSeconds:1,
+                maxValidTimeInSeconds:3600,
                 maxUsage:1
             }
         }
