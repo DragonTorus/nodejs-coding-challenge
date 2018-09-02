@@ -7,9 +7,11 @@ const accessMaxValidTimeInSeconds = config.tokenSettings[TokenTypes.access].maxV
 const {isTokenStillValidByTimeLimit, updateTokenByTypeIfExpired} = require('../helpers/authenticationHelpers');
 const {matiError, errorResponseHandler} = require('../helpers/errorHandler');
 
-
 exports.authenticateUser = async function(req, res) {
     try {
+        if (!req.body.email || !req.body.password){
+            throw new matiError('Required data "email" or "password" is not defined', 'BadRequest', 400);
+        }
         let user = await UserModel.findOne({email: req.body.email});
         if (!user){
             throw new matiError('User Not found', 'NotFound', 404);
@@ -25,7 +27,12 @@ exports.authenticateUser = async function(req, res) {
 
         user = await updateTokenByTypeIfExpired(UserModel, user, TokenTypes.refresh);
 
-        res.json(user);
+        res.json({
+            name:user.name,
+            email:user.email,
+            accessToken:user.accessToken.token,
+            refreshToken:user.refreshToken.token
+        });
     } catch (e) {
         return errorResponseHandler(e,res);
     }
@@ -33,7 +40,12 @@ exports.authenticateUser = async function(req, res) {
 
 exports.refreshAccessToken = async function(req, res) {
     try {
+        if (!req.body.email || !req.body.token){
+            throw new matiError('Required data "email" or "token" is not defined', 'BadRequest', 400);
+        }
+
         let user = await UserModel.findOne({email: req.body.email, 'refreshToken.token': req.body.token});
+
         if (!user){
             throw new matiError('User Not found', 'NotFound', 404);
         }
@@ -44,7 +56,11 @@ exports.refreshAccessToken = async function(req, res) {
 
         user = await updateTokenByTypeIfExpired(UserModel, user, TokenTypes.access);
 
-        res.json(user);
+        res.json({
+            name:user.name,
+            email:user.email,
+            accessToken:user.accessToken.token
+        });
     } catch (e) {
         return errorResponseHandler(e,res);
     }

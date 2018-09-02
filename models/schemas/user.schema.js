@@ -13,7 +13,7 @@ const User = new Schema({
         trim:true,
         validate: {
             validator: (value) => {
-                return value.length>8 && value.length<32;
+                return value.length>=8 && value.length<=32;
             },
             message: '"name" must have length from 8 to 32 characters'
         }
@@ -39,7 +39,7 @@ const User = new Schema({
             message: '"password" must be encrypted'
         }
     },
-    accessToken:tokenSchema,
+    accessToken: tokenSchema,
     refreshToken: tokenSchema,
     createdAt: {
         type: Date,
@@ -53,6 +53,8 @@ const User = new Schema({
     toObject: {
         transform: (doc, ret) => {
             delete ret.__v;
+            delete ret.accessToken;
+            delete ret.refreshToken;
             delete ret.password;
         }
     }

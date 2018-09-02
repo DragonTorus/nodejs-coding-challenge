@@ -7,7 +7,7 @@ const {matiError, errorResponseHandler} = require('../helpers/errorHandler');
 exports.createUser = async function(req, res) {
     try {
         if (!req.body.email || !req.body.password){
-            throw new matiError('Required data is not defined', 'BadRequest', 400);
+            throw new matiError('Required data "email" or "password" is not defined', 'BadRequest', 400);
         }
 
         let User = new UserModel(req.body);
@@ -50,13 +50,13 @@ exports.getUserById = async function(req, res) {
 exports.updateUser = async function(req, res) {
     try {
         if (!req.body.email || !req.body.password){
-            throw new matiError('Required data is not defined', 'BadRequest', 400);
+            throw new matiError('Required data "email" or "password" is not defined', 'BadRequest', 400);
         }
 
         req.body.password = await getStringHash(req.body.password);
 
         let user = await UserModel.findOneAndUpdate({'_id':req.params.id}, req.body,
-            {new: true,runValidators: true}
+            {new: true,runValidators: true, setDefaultsOnInsert:true}
         );
 
         res.json(user);
