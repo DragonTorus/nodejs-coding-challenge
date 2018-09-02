@@ -24,7 +24,6 @@ async function updateTokenByTypeIfExpired(UserModel , CurrentUser, TokenType) {
     if (isTokenStillValidByTimeLimit(CurrentUser[TokenType].createdAt, config.tokenSettings[TokenType])){
         return CurrentUser;
     }
-
     CurrentUser[TokenType].token = uuid();
     CurrentUser[TokenType].createdAt = new Date();
     return await UserModel.findOneAndUpdate({'_id':CurrentUser._id}, CurrentUser,{new: true,runValidators: true});

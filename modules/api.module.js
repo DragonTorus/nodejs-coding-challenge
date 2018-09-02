@@ -84,11 +84,13 @@ exports.getUserByIdApi = async function(id) {
 };
 
 exports.updateUserApi = async function(data, id) {
-    if (!data.email || !data.password || !id){
-        throw new matiError('Required data "email", "password" or path param "id" is not defined', 'BadRequest', 400);
+    if (Object.keys(data).length===0 || !id){
+        throw new matiError('Required data to update is missing or path param "id" is not defined', 'BadRequest', 400);
     }
 
-    data.password = await getStringHash(data.password);
+    if (data.password){
+        data.password = await getStringHash(data.password);
+    }
 
     return await UserModel.findOneAndUpdate({'_id':id}, data,
         {new: true,runValidators: true, setDefaultsOnInsert:true}
