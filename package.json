@@ -3,12 +3,9 @@
   "version": "0.0.1",
   "description": "NodeJS Coding Challenge",
   "main": "server.js",
-  "directories": {
-    "test": "tests"
-  },
   "scripts": {
-    "test": "mocha",
-    "start": "node server.js"
+    "start": "SET NODE_ENV=development && node server.js",
+    "test": "mocha tests/**/*.js --timeout 10000 --exit"
   },
   "repository": {
     "type": "git",
@@ -24,11 +21,14 @@
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.18.3",
     "express": "^4.16.3",
-    "mocha": "^5.2.0",
     "moment": "^2.22.2",
     "mongoose": "^5.2.12",
-    "request": "^2.88.0",
-    "request-promise-native": "^1.0.5",
     "uuid": "^3.3.2"
+  },
+  "devDependencies": {
+    "mocha": "^5.2.0",
+    "nyc": "^13.0.1",
+    "request": "^2.88.0",
+    "request-promise-native": "^1.0.5"
   }
 }

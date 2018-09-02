@@ -9,7 +9,7 @@ module.exports = function () {
             production:'production'
         },
         mongo:{
-            database: process.env.MONGO_CONNECTION || 'mongodb://localhost:27017/development'
+            database: process.env.MONGO_CONNECTION || 'mongodb+srv://mati-demo-user:ztSEsYYDR1CLJbR6@cluster0-yateh.mongodb.net/test?retryWrites=true/development'
         },
         tokenSettings:{
             types : {

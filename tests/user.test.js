@@ -88,7 +88,6 @@ describe('Test Endpoints (Valid scenarios)', function() {
         };
 
         let resp = await request(optionsApi);
-        console.log(resp);
         assert.equal(resp._id, user._id);
         assert.equal(resp.name, 'update-test-name');
         assert.equal(resp.email, 'update@mail.com');
@@ -229,5 +228,6 @@ describe('Test Endpoints (InValid scenarios)', function() {
     after(async function() {
         await mongoose.connect(config.mongo.database,{useNewUrlParser: true});
         await UserModel.remove({});
+        await mongoose.disconnect();
     });
 });

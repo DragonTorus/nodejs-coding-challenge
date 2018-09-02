@@ -265,6 +265,7 @@ describe('Test Authentication (InValid scenarios)', function() {
     after(async function() {
         await mongoose.connect(config.mongo.database,{useNewUrlParser: true});
         await UserModel.remove({});
+        await mongoose.disconnect();
     });
 });
 
