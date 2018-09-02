@@ -4,8 +4,9 @@
   "description": "NodeJS Coding Challenge",
   "main": "server.js",
   "scripts": {
-    "start": "SET NODE_ENV=development && node server.js",
-    "test": "mocha tests/**/*.js --timeout 10000 --exit"
+    "start": "SET NODE_ENV=development SET MONGO_CONNECTION=mongodb+srv://mati-demo-user:ztSEsYYDR1CLJbR6@cluster0-yateh.mongodb.net/test?retryWrites=true/development && node server.js",
+    "test": "mocha tests/integration/*.js --timeout 10000 --exit",
+    "test:unit": "nyc --reporter=text mocha tests/unit/*.js --timeout 10000 --exit"
   },
   "repository": {
     "type": "git",

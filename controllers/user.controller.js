@@ -1,22 +1,10 @@
-const UserModel = require('../models/user.model');
-const TokenModel = require('../models/token.model');
-const {getStringHash} = require('../services/bcryptService');
-const uuid = require('uuid/v4');
-const {matiError, errorResponseHandler} = require('../helpers/errorHandler');
+const ApiModule = require('../modules/api.module');
+const {errorResponseHandler} = require('../helpers/errorHandler');
+
 
 exports.createUser = async function(req, res) {
     try {
-        if (!req.body.email || !req.body.password){
-            throw new matiError('Required data "email" or "password" is not defined', 'BadRequest', 400);
-        }
-
-        let User = new UserModel(req.body);
-        User.accessToken = new TokenModel({token:uuid()});
-        User.refreshToken = new TokenModel({token:uuid()});
-        User.password = await getStringHash(req.body.password);
-
-        let user = await UserModel.create(User);
-
+        let user = await ApiModule.createUserApi(req.body);
         res.json(user);
     } catch (e) {
         return errorResponseHandler(e,res);
@@ -25,10 +13,7 @@ exports.createUser = async function(req, res) {
 
 exports.getAllUsers = async function(req, res) {
     try {
-        let users = await UserModel.find();
-        if (!users){
-            throw new matiError('User Not found', 'NotFound', 404);
-        }
+        let users = await ApiModule.getAllUsersApi()
         res.json(users);
     } catch (e) {
         return errorResponseHandler(e,res);
@@ -37,14 +22,7 @@ exports.getAllUsers = async function(req, res) {
 
 exports.getUserById = async function(req, res) {
     try {
-        if (!req.params.id){
-            throw new matiError('Required data "id" is not defined', 'BadRequest', 400);
-        }
-
-        let user = await UserModel.findById(req.params.id);
-        if (!user){
-            throw new matiError('User Not found', 'NotFound', 404);
-        }
+        let user = await ApiModule.getUserByIdApi(req.params.id);
         res.json(user);
     } catch (e) {
         return errorResponseHandler(e,res);
@@ -53,16 +31,7 @@ exports.getUserById = async function(req, res) {
 
 exports.updateUser = async function(req, res) {
     try {
-        if (!req.body.email || !req.body.password || !req.params.id){
-            throw new matiError('Required data "email", "password" or path param "id" is not defined', 'BadRequest', 400);
-        }
-
-        req.body.password = await getStringHash(req.body.password);
-
-        let user = await UserModel.findOneAndUpdate({'_id':req.params.id}, req.body,
-            {new: true,runValidators: true, setDefaultsOnInsert:true}
-        );
-
+        let user = await ApiModule.updateUserApi(req.body, req.params.id);
         res.json(user);
     } catch (e) {
         return errorResponseHandler(e,res);

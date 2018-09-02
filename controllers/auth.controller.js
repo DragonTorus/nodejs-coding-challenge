@@ -1,32 +1,9 @@
-const UserModel = require('../models/user.model');
-const {compareStringAndHash} = require('../services/bcryptService');
-const config = require('../config');
-const TokenTypes = config.tokenSettings.types;
-const refreshMaxValidTimeInSeconds = config.tokenSettings[TokenTypes.refresh].maxValidTimeInSeconds;
-const accessMaxValidTimeInSeconds = config.tokenSettings[TokenTypes.access].maxValidTimeInSeconds;
-const {isTokenStillValidByTimeLimit, updateTokenByTypeIfExpired} = require('../helpers/authenticationHelpers');
-const {matiError, errorResponseHandler} = require('../helpers/errorHandler');
+const ApiModule = require('../modules/api.module');
+const {errorResponseHandler} = require('../helpers/errorHandler');
 
 exports.authenticateUser = async function(req, res) {
     try {
-        if (!req.body.email || !req.body.password){
-            throw new matiError('Required data "email" or "password" is not defined', 'BadRequest', 400);
-        }
-        let user = await UserModel.findOne({email: req.body.email});
-        if (!user){
-            throw new matiError('User Not found', 'NotFound', 404);
-        }
-
-        if (!(await compareStringAndHash(req.body.password, user.password))){
-            throw new matiError('Wrong password', 'Unauthorized', 401);
-        }
-
-        if (!isTokenStillValidByTimeLimit(user.accessToken.createdAt, accessMaxValidTimeInSeconds)){
-            user = await updateTokenByTypeIfExpired(UserModel, user, TokenTypes.access);
-        }
-
-        user = await updateTokenByTypeIfExpired(UserModel, user, TokenTypes.refresh);
-
+        let user = await ApiModule.authenticateUserApi(req.body);
         res.json({
             name:user.name,
             email:user.email,
@@ -40,22 +17,7 @@ exports.authenticateUser = async function(req, res) {
 
 exports.refreshAccessToken = async function(req, res) {
     try {
-        if (!req.body.email || !req.body.token){
-            throw new matiError('Required data "email" or "token" is not defined', 'BadRequest', 400);
-        }
-
-        let user = await UserModel.findOne({email: req.body.email, 'refreshToken.token': req.body.token});
-
-        if (!user){
-            throw new matiError('User Not found', 'NotFound', 404);
-        }
-
-        if (!isTokenStillValidByTimeLimit(user.accessToken.createdAt, refreshMaxValidTimeInSeconds)){
-            throw new matiError('Refresh Token expired, please authenticate with your email and password to get new refresh token.', 'Unauthorized', 401);
-        }
-
-        user = await updateTokenByTypeIfExpired(UserModel, user, TokenTypes.access);
-
+        let user = await ApiModule.refreshAccessTokenApi(req.body);
         res.json({
             name:user.name,
             email:user.email,
