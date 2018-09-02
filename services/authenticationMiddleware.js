@@ -24,7 +24,7 @@ function getTokenFromAuthorizationHeader(req) {
         throw new Error('Authorization is missing');
     }
     const parts = req.headers.authorization.match(/^(Bearer)\s([0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12})$/i);
-    if (!parts.length === 0){
+    if (!parts || !parts.length === 0){
         throw new Error('Invalid authorization header detected');
     }
     return parts[2];

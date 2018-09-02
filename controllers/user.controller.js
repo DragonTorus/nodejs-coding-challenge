@@ -37,6 +37,10 @@ exports.getAllUsers = async function(req, res) {
 
 exports.getUserById = async function(req, res) {
     try {
+        if (!req.params.id){
+            throw new matiError('Required data "id" is not defined', 'BadRequest', 400);
+        }
+
         let user = await UserModel.findById(req.params.id);
         if (!user){
             throw new matiError('User Not found', 'NotFound', 404);
@@ -49,8 +53,8 @@ exports.getUserById = async function(req, res) {
 
 exports.updateUser = async function(req, res) {
     try {
-        if (!req.body.email || !req.body.password){
-            throw new matiError('Required data "email" or "password" is not defined', 'BadRequest', 400);
+        if (!req.body.email || !req.body.password || !req.params.id){
+            throw new matiError('Required data "email", "password" or path param "id" is not defined', 'BadRequest', 400);
         }
 
         req.body.password = await getStringHash(req.body.password);
